@@ -1,0 +1,88 @@
+patrat(X,Y):-Y is X*X.
+
+paritate(X,P):-M is X mod 2,M=0,P is 0.
+paritate(X,P):-M is X mod 2,M=1,P is 1.
+/*Prima linie paritate(X,P):-M is X mod 2,M=0,P is 0. este prima regula. Aceasta verifica daca restul împar?irii lui X la 2 este 0 ?i, daca este adevarat,
+atribuie lui P valoarea 0, indicând ca numarul X este par.
+A doua linie paritate(X,P):-M is X mod 2,M=1,P is 1. este a doua regula. Aceasta verifica daca restul împar?irii lui X la 2 este 1 ?i, daca este adevarat,
+atribuie lui P valoarea 1, indicând ca numarul X este impar.*/
+
+maxim(X,Y,Z):-X>=Y,Z=X.
+maxim(X,Y,Z):-X<Y,Z=Y.
+
+maxim(X,Y,Z,Q):-X>=Y,X>=Z,Q=X.
+maxim(X,Y,Z,Q):-Y>=X,Y>=Z,Q=Y.
+maxim(X,Y,Z,Q):-Z>=X,Z>=Y,Q=Z.
+
+modul(X,Y):- X >=0,Y is X.
+modul(X,Y):- X<0,Y is X*(-1).
+/*Prima linie modul(X,Y):- X >=0,Y is X. reprezinta cazul când numarul X este mai mare sau egal cu zero. Daca X este pozitiv sau zero, atunci Y va fi egal cu X.
+ În acest caz, Y va fi aceea?i valoare ca ?i X, deoarece valoarea absoluta a unui numar pozitiv sau zero este chiar acel numar.
+A doua linie modul(X,Y):- X<0,Y is X*(-1). reprezinta cazul când numarul X este mai mic decât zero. Daca X este negativ, atunci Y va fi egal cu X înmul?it cu -1.
+În acest caz, Y va fi opusul lui X pentru ca valoarea absoluta a unui numar negativ este valoarea sa pozitiva echivalenta.*/
+
+suma(X,Y,S):-S is X+Y.
+suma([],0).
+suma([X|Rest],N):-suma(Rest,N1),N is N1+X.
+
+afisare([]).
+afisare([X|Rest]):-write(X),afisare(Rest).
+/*Prima linie afisare([]). este o baza de recursivitate. Ea spune ca atunci când lista data este vida, nu exista nimic de afi?at ?i predicatul se opre?te.
+A doua linie afisare([X|Rest]):-write(X),afisare(Rest). este regula principala a predicatului. Ea spune ca pentru o lista care con?ine cel pu?in un element
+(cel pu?in capul listei X ?i coada listei Rest), se va afi?a elementul X folosind write(X) ?i apoi se continua afi?area recursiva a restului listei (Rest).*/
+
+copie([],[]).
+copie([X|Rest1],[X|Rest2]):-copie(Rest1,Rest2).
+/*Aceasta regula se aplica atunci când lista de intrare are cel pu?in un element ([X|Rest1]) ?i lista rezultata are cel pu?in un element ([X|Rest2]).
+Ea împarte lista de intrare în doua par?i: X este primul element al listei de intrare, iar Rest1 este restul listei de intrare.
+De asemenea, X este primul element al listei rezultate, iar Rest2 este restul listei rezultate.
+Regula utilizeaza recursivitatea pentru a copia restul listei de intrare (Rest1) în restul listei rezultate (Rest2), pastrând aceea?i structura ?i elemente ca în lista ini?iala.*/
+
+sumap([],0).
+sumap([X|Rest],N):-sumap(Rest,N1),N is N1+(X*X).
+/*Prima linie sumap([],0). reprezinta baza de recursivitate a predicatului. Ea spune ca suma patratelor elementelor unei liste vide este 0.
+A doua linie sumap([X|Rest],N):-sumap(Rest,N1),N is N1+(X*X). este regula principala a predicatului. Ea spune ca pentru o lista nevida cu capul X ?i coada Rest,
+se calculeaza suma patratelor elementelor din Rest în N1, iar N este suma dintre N1 ?i patratul lui X.*/
+
+prsc([],[],0).
+prsc([X1|Rest1],[X2|Rest2],N):-prsc(Rest1,Rest2,N1),N is N1+(X1+X2).
+/*Prima linie prsc([],[],0). este o baza de recursivitate. Ea spune ca atunci când ambele liste sunt vide, suma lor este 0. Aceasta se întâmpla la finalul procesului de adunare.
+A doua linie prsc([X1|Rest1],[X2|Rest2],N):-prsc(Rest1,Rest2,N1),N is N1+(X1+X2). este regula principala a predicatului. Ea spune ca pentru doua liste date ([X1|Rest1] ?i
+[X2|Rest2]), se efectueaza o opera?ie de adunare între primul element al fiecarei liste (X1 ?i X2), iar rezultatul se adauga la suma calculata recursiv pentru restul listelor
+(Rest1 ?i Rest2), rezultând suma finala N*/
+
+ultim([X],X). /*spune ca ultimul element al unei liste cu un singur element este chiar acel element (X).*/
+ultim([_Y|Rest],X):-ultim(Rest,X).
+/*A doua regula, ultim([_Y|Rest],X) :- ultim(Rest,X)., spune ca ultimul element al unei liste cu mai mult de un element este tot ultimul element al listei Rest.
+ Adica, lista ini?iala [H|T] este despar?ita în primul element _Y ?i restul listei Rest.
+ Prin recursivitate, acest lucru se repeta pâna când ajungem la lista cu un singur element,caz în care se aplica prima regula.*/
+ 
+apartine(X,[X|_]). /*spune ca X apar?ine unei liste daca X este primul element din lista respectiva. Aceasta verifica daca X este capul listei*/
+apartine(X,[_Y|Rest]):-apartine(X,Rest).
+/* spune ca X apar?ine listei daca X apar?ine restului listei (adica lista fara primul element). Se folose?te recursivitatea pentru a verifica daca X este în restul listei,
+ ignorând primul element de fiecare data, pâna când se gase?te X sau lista devine vida*/
+ 
+nr([],0). /*spune ca numarul de elemente dintr-o lista vida este zero*/
+nr([_X|Rest],N):-nr(Rest,N1),N is N1+1.
+/*spune ca numarul de elemente dintr-o lista care con?ine cel pu?in un element ([_X|Rest]) este egal cu N1 (numarul de elemente din restul listei) plus unu.
+ Se folose?te recursivitatea pentru a parcurge lista ?i a numara elementele pâna când se ajunge la lista vida (cazul de baza).
+ Practic calculeaza numarul de elemente dintr-o lista prin parcurgerea ei ?i adunarea câte unu pentru fiecare element întâlnit*/
+
+medie([],0). /* spune ca media unei liste vide este zero*/
+medie([X|Rest],R):-suma([X|Rest],S),nr([X|Rest],N),R is S/N.
+/*calculeaza media unei liste care con?ine cel pu?in un element ([X|Rest]). În aceasta regula, se utilizeaza alte doua predicate auxiliare: suma ?i nr
+se calculeaza suma elementelor din lista ?i se numara aceste elemente utilizând predicatul suma ?i, respectiv, nr.
+Apoi, media este calculata împar?ind suma la numarul total de elemente ?i rezultatul este întors în variabila R
+suma([X|Rest],S) este un predicat auxiliar care calculeaza suma elementelor din lista [X|Rest] ?i o întoarce în variabila S.
+nr([X|Rest],N) este un predicat auxiliar care numara elementele din lista [X|Rest] ?i rezultatul îl întoarce în variabila N.*/
+
+nrpoz([],0). /*spune ca numarul de numere pozitive într-o lista vida este zero*/
+nrpoz([X|Rest],N):-nrpoz(Rest,N1),X>=0,N is N1+1.
+nrpoz([_X|Rest],N):-nrpoz(Rest,N).
+/*nrpoz([X|Rest],N):-nrpoz(Rest,N1),X>=0,N is N1+1., spune ca numarul de numere pozitive într-o lista ([X|Rest]) este egal cu N1
+(numarul de numere pozitive în restul listei) plus unu, daca X este un numar pozitiv (mai mare sau egal cu zero).
+Se folose?te recursivitatea pentru a parcurge lista ?i a numara numerele pozitive.
+nrpoz([_X|Rest],N):-nrpoz(Rest,N)., spune ca numarul de numere pozitive într-o lista care începe cu un element care nu este pozitiv
+(_X) este egal cu numarul de numere pozitive din restul listei Rest. Aceasta regula este necesara pentru a continua parcurgerea listei,
+ignorând elementele care nu sunt pozitive.*/
+
