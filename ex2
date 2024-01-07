@@ -1,0 +1,87 @@
+cmmdc(A, 0, B) :- B = A.
+cmmdc(A, B, C) :- A >= B, R is A mod B, cmmdc(B, R, C).
+cmmdc(A, B, C) :- A < B, R is B mod A, cmmdc(A, R, C).
+
+/*Prima linie, cmmdc(A, 0, B) :- B = A., este un caz de baza în care se spune ca daca al doilea numar este 0, atunci cmmdc-ul este primul numar
+(deoarece orice numar împartit la 0 este chiar acel numar).
+A doua linie, cmmdc(A, B, C) :- A >= B, R is A mod B, cmmdc(B, R, C)., verifica daca primul numar este mai mare sau egal decât al doilea numar. Daca este adevarat,
+se calculeaza restul împar?irii primului numar la al doilea ?i se continua recursiv pentru al doilea numar ?i rest pâna când se gase?te cazul de baza.
+A treia linie, cmmdc(A, B, C) :- A < B, R is B mod A, cmmdc(A, R, C)., se executa atunci când primul numar este mai mic decât al doilea. Aici se schimba ordinea numerelor
+si se continua aceeasi logica recursiva ca mai sus.
+Astfel, algoritmul recursiv divizeaza numerele initiale pâna când unul dintre ele devine 0 si returneaza rezultatul.*/
+
+div(N,D):- D =< N, P is N mod D, P =:= 0, writeln(D), D1 is D + 1, div(N, D1).
+div(N,D):- D =< N, D1 is D + 1, div(N, D1).
+
+/*Prima regula verifica daca D este mai mic sau egal cu N. Daca aceasta conditie este îndeplinita, verifica daca D este un divizor pentru N (adica N împar?it la D are rest 0).
+Daca este adevarat, afiseaza D (utilizând writeln) si trece la urmatorul posibil divizor prin incrementarea lui D1 cu 1, apoi continua recursiv cu divizorul urmator.
+A doua clauza div(N,D):- D =< N, D1 is D + 1, div(N, D1). este o clauza de recursivitate care trece la urmatorul divizor fara sa afiseze nimic, indiferent daca D este divizor sau nu.*/
+
+
+inversa([X|Rest],L):-inversa([X|Rest],[],L).
+inversa([],Lt,L):-L=Lt.
+inversa([X|Rest],Lt,L):-inversa(Rest,[X|Lt],L).
+
+/*inversa([X|Rest],L):-inversa([X|Rest],[],L).: Aceasta regula initializeaza procesul de inversare a unei liste.
+Ea apeleaza un predicat auxiliar inversa/3 cu trei argumente, unde lista de intrare [X|Rest] va fi inversata si stocata în L.
+inversa([],Lt,L):-L=Lt.: Aceasta regula trateaza cazul de baza când lista de intrare este vida. Ea verifica daca lista rezultata L
+este egala cu lista inversata Lt. Când lista de intrare este goala, lista rezultata va fi echivalenta cu lista inversata, astfel încât inversarea sa fie completa.
+inversa([X|Rest],Lt,L):-inversa(Rest,[X|Lt],L).: Aceasta regula este partea principala a algoritmului de inversare. Prin aceasta regula,
+se proceseaza recursiv lista [X|Rest]. Elementul X este adaugat la începutul listei Lt, iar Rest este recursiv inversata. Astfel, se creeaza o
+lista inversata Lt, care este apoi utilizata pentru a obsine lista inversata finala L. */
+
+
+compar([],[]):-writeln('Listele au aceasi numar de elemente').
+compar([L],[]):-writeln('Prima lista are mai multe elemente').
+compar([],[L]):-writeln('A doua lista are mai multe elemente').
+compar([X|R1],[Y|R2]):-compar(R1,R2).
+/*compar([],[]):-writeln('Listele au aceasi numar de elemente').: Aceasta este o regula de comparare care se activeaza atunci când ambele liste sunt vide.
+Mesajul afisat este "Listele au acelasi numar de elemente".
+compar([L],[]):-writeln('Prima lista are mai multe elemente').: Aceasta este o regula de comparare care se activeaza când prima lista ([L]) are un singur element,
+în timp ce a doua lista este vida. Mesajul afisat este "Prima lista are mai multe elemente".
+compar([],[L]):-writeln('A doua lista are mai multe elemente').: Aceasta este o regula de comparare care se activeaza când prima lista este vida, iar a doua lista
+([L]) are un singur element. Mesajul afisat este "A doua lista are mai multe elemente".
+compar([X|R1],[Y|R2]):-compar(R1,R2).: Aceasta regula este o regula generala de comparatie care se activeaza atunci când ambele liste au cel putin un element.Ea elimina primul
+element din fiecare lista (X din prima lista si Y din a doua lista) si continua compararea restului de liste (R1 si R2) prin apelarea recursiva a predicatului compar */
+
+multime([],[]).
+multime([X|R]):- not(member(X,R)), multime(R).
+/*multime([],[]).: Aceasta este o regula de baza care afirma ca o lista vida este o multime vida. Aceasta regula este adevarata pentru cazul de baza atunci când
+lista de intrare este vida si rezultatul este, de asemenea, o lista vida (o multime vida).
+multime([X|R]):- not(member(X,R)), multime(R).: Aceasta regula verifica daca o lista [X|R] este o multime. Ea face acest lucru verificând recursivitatea: mai întâi,
+verifica daca elementul X nu este membru în restul listei R cu not(member(X,R)). Daca aceasta conditie este adevarata, atunci continua sa verifice recursivitatea pentru
+restul listei, folosind multime(R). Practic, aceasta regula verifica ca fiecare element din lista este unic, adica nu apare de mai multe ori în lista respectiva.*/
+
+eliminare([],[]).
+eliminare([X|R],[X|L]):- not(member(X,R)), eliminare(R,L).
+eliminare([X|R],L):- member(X,R), eliminare(R,L).
+/*eliminare([],[]).: Aceasta este regula de baza care spune ca eliminarea duplicatelor dintr-o lista vida rezulta într-o lista vida - nu exista elemente duplicate pentru a fi
+eliminate.
+eliminare([X|R],[X|L]):- not(member(X,R)), eliminare(R,L).: Aceasta regula elimina duplicatele din lista [X|R] prin adaugarea elementului X la lista rezultata L si continuarea
+procesului de eliminare a duplicatelor în restul listei R. Ea verifica daca X nu este membru în restul listei R folosind not(member(X,R)). Daca aceasta conditie este adevarata,
+adauga X la lista rezultata L si continua recursivitatea cu eliminare(R,L).
+eliminare([X|R],L):- member(X,R), eliminare(R,L).: Aceasta regula gestioneaza cazul în care elementul X este deja membru în restul listei R. În acest caz, nu este adaugat la lista
+rezultata L, ci se continua recursivitatea pentru a elimina alte posibile duplicaturi. */
+
+interclasare([],X,X).
+interclasare(X,[],X).
+interclasare([X|R1],[Y|R2],[X|R]):-X<Y,interclasare(R1,[Y|R2],R).
+interclasare([X|R1],[Y|R2],[X|R]):-Y<X,interclasare([X|R1],R2,R).
+/*interclasare([],X,X).: Aceasta este regula de baza care se activeaza atunci când prima lista este vida. În acest caz, rezultatul interclasarii este a doua lista (X).
+Aceasta clauza este responsabila pentru procesul efectiv de îmbinare. Ea afirma ca daca capul primei liste (X) este mai mare decât capul celei de-a doua liste
+(Y), plaseaza X la începutul listei rezultate ([X|R]) si continua îmbinarea cozii primei liste (R1) cu întreaga a doua lista ([Y|R2]). Se apeleaza recursiv interclasare/3 cu
+o prima lista mai mica si aceeasi a doua lista.
+Similar, aceasta clauza gestioneaza cazul în care capul primei liste (X) este mai mic decât capul celei de-a doua liste (Y). Plaseaza X la începutul listei rezultate
+([X|R]) si continua îmbinarea întregii prime liste ([X|R1]) cu coada celei de-a doua liste ([Y|R2]). Se apeleaza recursiv interclasare/3 cu o a doua lista mai mica si
+aceeasi prima lista.*/
+
+maxim([X], X).
+maxim([H|Rest], M) :-maxim(Rest, M1),(H > M1 -> M = H ; M = M1).
+/* ->"if-then-else" sau "control în caz de"
+ max_list([X], X).Regula defineste cazul de baza al listei care contine un singur element X. În acest caz, maximul este chiar acel element.
+max_list([H|T], M) :- max_list(T, M1), (H > M1 -> M = H ; M = M1).Regula pentru listele cu cel putin doua elemente.
+H reprezinta primul element din lista, iar T este restul listei.
+max_list(T, M1) se foloseste de recursivitate pentru a gasi maximul din restul listei si îl stocheaza în MaxRest.
+(H > M1 -> M = H ; M = M1) compara primul element H cu maximul gasit în restul listei MaxRest si stabileste M ca fiind maximul dintre acestea doua.
+Daca H este mai mare decât M1, atunci M va fi setat ca fiind H. În caz contrar, M va fi setat ca fiind M1*/
+
