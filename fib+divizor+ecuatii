@@ -1,0 +1,26 @@
+fibonacci
+
+fib(1,1).
+fib(2,1).
+fib(N,F):-N1 is N-1, N2 is N-2, fib(N1,F1),fib(N2,F2), F is F1 + F2.
+
+
+divizor(K,N,D):-M is N mod K, M = 0, D is 1.
+divizor(_,_,D):-D is 0.
+
+divizori(K,N):-K=N, write(K).
+divizori(K,N):-divizor(K,N,D), D = 1, write(K), write(', '), K1 is K+1, divizori(K1, N).
+divizori(K,N):-K1 is K+1, divizori(K1,N).
+
+
+ec gr1
+
+ec1(A,_B,_X):-A=0, write('nu e ecuatie').
+ec1(A,B,X):-X is -B/A.
+
+ec g2.
+
+ec2(A,B,_C,_X1,_X2):-A=0,B=0, write('nu e ecuatie').
+ec2(A,_B,_C,_X1,_x2):-A=0, write('nu e ec de grad2').
+ec2(A,B,C,X1,X2):-D is B*B-4*A*C, D>=0, X1 is (-B+sqrt(D))/(2*A), X2 is (-B+sqrt(D))/(2*A).
+ec2(_a,_B,_C,_X1,_X2):-write('Ec are rad complexe').
