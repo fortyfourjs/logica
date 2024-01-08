@@ -1,0 +1,157 @@
+
+       
+/*
+buguri speciale
+[X, List] =instead> of [X| List]
+Also you cannot use directly X+1 =instead> X1 is X+1
+la liste nu merge 'is' ci doar '='
+*/
+       
+/*1*/
+delta(A, B, C, D):- D is B*B - 4*A*C.
+equation(A,B,C,X):- delta(A,B,C,D1), D1<0 , X is 0.
+equation(A,B,C,X):- delta(A,B,C,D1), D1 =:= 0, X is -B/2*A.
+equation(A,B,C,X):- delta(A,B,C,D1), D1>0, X is ((-1*B-sqrt(D1))/2*A).
+equation(A,B,C,X):- delta(A,B,C,D1), D1>0, X is ((-1*B+sqrt(D1))/2*A).
+
+/*2*/
+sir(N, Res):- sir_helper(N, 0, Res).
+sir_helper(N, Acc, Res):- N =0, Res is Acc.
+sir_helper(N, Acc, Res):- Acc1 is Acc + 1/N, N1 is N-1, sir_helper(N1, Acc1, Res).
+
+/*3*/
+ackermann(0,N,X) :- X is N+1.
+ackermann(M, 0, X) :- M>0, M1 is M-1, ackermann(M1, 1, X).
+ackermann(M, N, X) :- M>0, N>0, M1 is M-1, N1 is N-1, ackermann(M, N1, X1), ackermann(M1, X1, X).
+
+/*4*/
+fibonacci(1, X) :- X is 1.
+fibonacci(2, X) :- X is 1.
+fibonacci(N, X) :- N1 is N-1, fibonacci(N1, X1), N2 is N-2, fibonacci(N2, X2), X is X1+X2.
+
+
+/*5*/
+f1(N, M, Y):- N < M, Y is N ** M.
+f1(N, M, Y):- M >= N, Y is N * M.
+
+
+/*6*/
+este_divizor(K, N) :- N mod K =:= 0 .
+divizori(N):- divizori_helper(1, N).
+divizori_helper(I, N) :- I =< N, este_divizor(I, N), write(I), write(" este divizor al lui "), write(N), nl, I1 is I+1, divizori_helper(I1, N).
+divizori_helper(I, N) :- I =< N, I1 is I+1,  divizori_helper(I1, N).
+divizori_helper(I, N) :- I =:= N.
+
+
+
+/*7*/
+factorial(N, Res):- factorial_helper(N, Res, 1).
+factorial_helper(N, Res, Acc):- N > 0, Acc1 is Acc * N, N1 is N - 1, factorial_helper(N1, Res, Acc1).
+factorial_helper(0, Res, Acc):- Res is Acc.
+
+f2(M, N, Res):- N < M, factorial(N, N_fac), Res is M * N_fac.
+f2(M, N, Res):- Res is N-M.
+
+
+/*8*/
+list_median(List, Res):- list_median_helper(List, Res, 0, 0).
+list_median_helper([X|List], Res, Sum, Pondere):- Sum1 is Sum + X, Pondere1 is Pondere+1, list_median_helper(List, Res, Sum1, Pondere1).
+list_median_helper([], Res, Sum, Pondere) :- Res is Sum / Pondere.
+
+
+/*9*/
+count_positives(List, Res) :- count_positives_helper(List, Res, 0).
+count_positives_helper([X|List], Res, Counter) :- X > 0, Counter1 is Counter+1, count_positives_helper(List, Res, Counter1).
+count_positives_helper([_|List], Res, Counter) :- count_positives_helper(List, Res, Counter).
+count_positives_helper([], Res, Counter) :- Res is Counter.
+
+
+/*10*/
+square_sum(List, Res):- square_sum_helper(List, Res, 0).
+square_sum_helper([X|List], Res, Acc):-  Acc1 is Acc + X*X, square_sum_helper(List, Res, Acc1).
+square_sum_helper([], Res, Acc):- Res is Acc.
+
+/*11*/
+list_max([X|List], Max):- list_max_helper(List, Max, X).
+list_max_helper([], Max, LocalMax) :- Max is LocalMax.
+list_max_helper([X|List], Max, LocalMax) :- X > LocalMax, list_max_helper(List, Max, X).
+list_max_helper([_|List], Max, LocalMax) :- list_max_helper(List, Max, LocalMax).
+
+/*12*/
+% pos starts at 1 cuz why not
+list_min_pos([X|List], Pos) :- list_min_pos_helper(List, Pos, X, 1, 1).
+list_min_pos_helper([X|List], Pos, LMin, _, CPos) :- X < LMin, CPos1 is CPos + 1, list_min_pos_helper(List, Pos, X, CPos1, CPos1).
+list_min_pos_helper([_|List], Pos, LMin, LMinPos, CPos) :- CPos1 is CPos + 1, list_min_pos_helper(List, Pos, LMin, LMinPos, CPos1).
+list_min_pos_helper([], Pos, _, LMinPos, _) :- Pos is LMinPos.
+
+/*13*/
+len(List, Res) :- len_helper(List, Res, 0).
+len_helper([], Res, Len) :- Res is Len.
+len_helper([_|List], Res, Len) :- Len1 is Len + 1, len_helper(List, Res, Len1).
+
+compare_len(List1, List2) :- len(List1, Len1), len(List2, Len2), Len1 < Len2, write("List 1 length is smaller"), nl.
+compare_len(List1, List2) :- len(List1, Len1), len(List2, Len2), Len1 > Len2, write("List 1 length is bigger"), nl.
+compare_len(_, _) :- write("Same length for both lists"), nl.
+
+/*
+?- compare_len([1, 1, 1], [2, 2, 2, 2]).
+?- compare_len([1, 1, 1], [2, 2]).
+?- compare_len([1, 1, 1], [2, 2, 2]).
+*/
+
+/*14*/
+invert_list(List, NewList):- invert_list_helper(List, NewList, []).
+invert_list_helper([], NewList, TempList) :- NewList = TempList.
+invert_list_helper([X|List], NewList, TempList) :- invert_list_helper(List, NewList, [X|TempList]).
+
+/*15*/
+
+/*16*/
+sublist_even([], []).
+sublist_even(List, Sublist) :- sublist_even_helper(List, Sublist, []).
+sublist_even_helper([_,Y|Rest], Sublist, Temp) :- Y1 is Y, sublist_even_helper(Rest, Sublist, [Temp|Y1]).
+sublist_even_helper([], Sublist, Temp) :-  Sublist = Temp.
+
+
+/*17*/
+prefix([], _L).
+prefix([X|L1], [X|L2]) :- prefix(L1, L2).
+
+sufix(L, L).
+sufix(L1, [_X|L2]) :- sufix(L1, L2).
+
+/*22*/
+produs_scalar([U1, U2], [V1, V2], Res) :- Res is U1 * U2 + V1 * V2.
+produs_scalar([U1, U2, U3], [V1, V2, V3], Res) :- Res is U1 * V1 + U2 * V2 + U3*V3.
+/*23*/
+
+% 24. Având o lista de numere întregi, sa se împarta aceasta în doua liste: una care
+% contine numerele pare si una care le contine pe cele impare
+elparimpar([], [], []).
+elparimpar([X| R], Pare, Impare):- P is X mod 2, P=0, elparimpar(R, Pare1, Impare), Pare=[X|Pare1].
+elparimpar([X| R], Pare, Impare):- P is X mod 2, P=1, elparimpar(R, Pare, Impare1), Impare=[X|Impare1].
+
+% 25. Sa se adauge un element la sfârsitul unei liste.
+addend(X, [], [X]).
+addend(X, [Y|R], Rez):-addend(X, R, Rez1), Rez = [Y|Rez1].
+
+
+% 26. Dându-se o lista si un numar întreg pozitiv i, sa se gaseasca elementul aflat pe
+% pozitia i în lista.
+pozi([X|_], 1, X).
+pozi([_A|R], I, X) :- I1 is I - 1, pozi(R, I1, X).
+
+% 27. Având date o lista si un element care apatine acestei liste, sa se specifice pe ce
+% pozitie este situat elementul în lista data.
+pozx(L, X, P):- pozx(L, X, 1, P).
+pozx([X|_], X, P, P).
+pozx([_|R], X, C, P) :- C1 is C + 1, pozx(R, X, C1, P).
+
+% 28. Se da o lista: sa se obtina doua liste din aceasta astfel încât prima din ele sa
+% contina elementele de pe pozitiile pare iar a doua pe cele de pe pozitiile impare
+parimpar([X], [], [X]).
+parimpar([X, Y],[Y], [X]).
+parimpar([X, Y|R], [Y|R1], [X|R2]) :- parimpar(R, R1, R2).
+
+
+
